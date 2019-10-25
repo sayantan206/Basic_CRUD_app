@@ -1,15 +1,18 @@
 package com.dey.cruddemo.dao;
 
 import com.dey.cruddemo.entity.Customer;
+import com.dey.cruddemo.entity.Project;
 
-import java.util.List;
+import java.util.LinkedHashSet;
 
 public interface CustomerDAO {
-    public List<Customer> getCustomers();
+    public LinkedHashSet<Customer> getCustomers();
 
     public void saveCustomer(Customer customer);
 
     public Customer getCustomerById(int id);
 
     void delete(int id);
+
+    Project getProjectByName(String name, int id);
 }

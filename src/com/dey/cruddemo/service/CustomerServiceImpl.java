@@ -2,11 +2,12 @@ package com.dey.cruddemo.service;
 
 import com.dey.cruddemo.dao.CustomerDAO;
 import com.dey.cruddemo.entity.Customer;
+import com.dey.cruddemo.entity.Project;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
+import java.util.LinkedHashSet;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -16,7 +17,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public List<Customer> getCustomers() {
+    public LinkedHashSet<Customer> getCustomers() {
         return customerDAO.getCustomers();
     }
 
@@ -36,5 +37,11 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     public void delete(int id) {
         customerDAO.delete(id);
+    }
+
+    @Override
+    @Transactional
+    public Project getProjectByName(String name, int id) {
+        return customerDAO.getProjectByName(name, id);
     }
 }
