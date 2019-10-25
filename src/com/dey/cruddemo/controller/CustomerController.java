@@ -1,11 +1,16 @@
 package com.dey.cruddemo.controller;
 
+import com.dey.cruddemo.entity.CustomProjectEditor;
 import com.dey.cruddemo.entity.Customer;
+import com.dey.cruddemo.entity.Project;
 import com.dey.cruddemo.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.beans.PropertyEditor;
 
 @Controller
 @RequestMapping("/customer")
@@ -13,6 +18,12 @@ public class CustomerController {
 
     @Autowired
     private CustomerService customerService;
+
+    @InitBinder
+    public void preProcess(WebDataBinder binder){
+        PropertyEditor editor = new CustomProjectEditor();
+        binder.registerCustomEditor(Project.class, "projects", editor);
+    }
 
     @GetMapping("/list")
     public ModelAndView listCustomer() {
@@ -32,6 +43,9 @@ public class CustomerController {
 
     @PostMapping("saveCustomer")
     public String saveCustomer(@ModelAttribute("customer") Customer customer) {
+        customer.getProjects()
+                .forEach(p -> p.setId(customerService.getProjectByName(p.getName(), customer.getId()).getId()));
+
         customerService.saveCustomer(customer);
         return "redirect:/customer/list";
     }

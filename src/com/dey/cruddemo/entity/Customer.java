@@ -1,6 +1,8 @@
 package com.dey.cruddemo.entity;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "customer")
@@ -11,7 +13,6 @@ public class Customer {
     @Column(name = "id")
     private int id;
 
-
     @Column(name = "first_name")
     private String firstName;
 
@@ -21,7 +22,20 @@ public class Customer {
     @Column(name = "email")
     private String email;
 
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "Customer_project",
+            joinColumns = @JoinColumn(name = "Customer_project_customer_id"),
+            inverseJoinColumns = @JoinColumn(name = "Customer_project_project_id")
+    )
+    private Set<Project> projects = new HashSet<>();
+
     public Customer() {
+    }
+
+    public Customer(String firstName, String lastName, String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
     }
 
     public int getId() {
@@ -54,6 +68,15 @@ public class Customer {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Set<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(Set<Project> projects) {
+        this.projects = projects;
+        projects.forEach(p -> p.setCustomers(Set.of(this)));
     }
 
     @Override

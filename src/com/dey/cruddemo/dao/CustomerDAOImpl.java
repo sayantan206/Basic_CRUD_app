@@ -1,12 +1,14 @@
 package com.dey.cruddemo.dao;
 
 import com.dey.cruddemo.entity.Customer;
+import com.dey.cruddemo.entity.Project;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 
 @Repository
@@ -16,21 +18,31 @@ public class CustomerDAOImpl implements CustomerDAO {
     private SessionFactory sessionFactory;
 
     @Override
-    public List<Customer> getCustomers() {
+    public LinkedHashSet<Customer> getCustomers() {
+        System.out.println("------------------------List---------------------------");
         Session session = sessionFactory.getCurrentSession();
-        return session.createQuery("from Customer order by lastName", Customer.class).list();
+        return new LinkedHashSet<>(session.createQuery("select c from Customer c left join fetch c.projects" +
+                " order by c.lastName", Customer.class).list());
     }
 
     @Override
     public void saveCustomer(Customer customer) {
+        System.out.println("------------------------Save/Update---------------------------");
         Session session = sessionFactory.getCurrentSession();
         session.saveOrUpdate(customer);
     }
 
     @Override
     public Customer getCustomerById(int id) {
+        System.out.println("------------------------Get cust by id---------------------------");
         Session session = sessionFactory.getCurrentSession();
-        return session.get(Customer.class, id);
+//        return session.get(Customer.class, id);
+        LinkedHashSet<Customer> set = new LinkedHashSet<>(session.createQuery("select c from Customer c left join fetch c.projects" +
+                " where c.id=:id", Customer.class)
+                .setParameter("id", id)
+                .list());
+
+        return set.iterator().next();
     }
 
     @Override
@@ -40,5 +52,20 @@ public class CustomerDAOImpl implements CustomerDAO {
         query.setParameter("custId", id);
 
         query.executeUpdate();
+    }
+
+    @Override
+    public Project getProjectByName(String name, int id) {
+        System.out.println("------------------------Get Project by name---------------------------");
+        Session session = sessionFactory.getCurrentSession();
+        Query<Project> query = session.createQuery("select p from Project p join p.customers c where " +
+                "p.name=:name", Project.class);
+
+        query.setParameter("name", name);
+
+        List<Project> resultList = query.getResultList();
+        if (resultList.isEmpty())
+            return new Project(name);
+        return resultList.get(0);
     }
 }

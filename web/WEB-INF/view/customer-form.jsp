@@ -42,6 +42,10 @@
                 <td><lable>Email: </lable></td>
                 <td><form:input path="email"/></td>
             </tr>
+            <tr>
+                <td><lable>Projects: </lable></td>
+                <td><form:input path="projects"/></td>
+            </tr>
         </table>
         <input type="submit" value="Save" class="add-button"/>
     </form:form>
