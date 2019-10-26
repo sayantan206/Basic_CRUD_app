@@ -32,5 +32,6 @@
     <orderEntry type="library" name="spring-aop-5.1.8.RELEASE-javadoc" level="project" />
     <orderEntry type="library" name="antlr-2.7.7" level="project" />
     <orderEntry type="library" name="c3p0-0.9.5.3" level="project" />
+    <orderEntry type="library" name="guava" level="project" />
   </component>
 </module>

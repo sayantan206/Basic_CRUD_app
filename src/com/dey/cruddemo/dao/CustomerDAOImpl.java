@@ -8,6 +8,7 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 
@@ -27,9 +28,16 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     @Override
     public void saveCustomer(Customer customer) {
-        System.out.println("------------------------Save/Update---------------------------");
+        System.out.println("------------------------Save---------------------------");
         Session session = sessionFactory.getCurrentSession();
         session.saveOrUpdate(customer);
+    }
+
+    @Override
+    public void updateCustomer(Customer customer) {
+        System.out.println("------------------------Update---------------------------");
+        Session session = sessionFactory.getCurrentSession();
+        session.merge(customer);
     }
 
     @Override
@@ -42,7 +50,10 @@ public class CustomerDAOImpl implements CustomerDAO {
                 .setParameter("id", id)
                 .list());
 
-        return set.iterator().next();
+        Iterator<Customer> iterator = set.iterator();
+        if(iterator.hasNext())
+            return iterator.next();
+        return null;
     }
 
     @Override
@@ -58,7 +69,7 @@ public class CustomerDAOImpl implements CustomerDAO {
     public Project getProjectByName(String name, int id) {
         System.out.println("------------------------Get Project by name---------------------------");
         Session session = sessionFactory.getCurrentSession();
-        Query<Project> query = session.createQuery("select p from Project p join p.customers c where " +
+        Query<Project> query = session.createQuery("select p from Project p where " +
                 "p.name=:name", Project.class);
 
         query.setParameter("name", name);
