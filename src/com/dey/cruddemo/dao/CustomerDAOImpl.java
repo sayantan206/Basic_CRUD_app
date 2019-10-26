@@ -69,7 +69,7 @@ public class CustomerDAOImpl implements CustomerDAO {
     public Project getProjectByName(String name, int id) {
         System.out.println("------------------------Get Project by name---------------------------");
         Session session = sessionFactory.getCurrentSession();
-        Query<Project> query = session.createQuery("select p from Project p join p.customers c where " +
+        Query<Project> query = session.createQuery("select p from Project p where " +
                 "p.name=:name", Project.class);
 
         query.setParameter("name", name);

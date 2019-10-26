@@ -76,7 +76,17 @@ public class Customer {
 
     public void setProjects(Set<Project> projects) {
         this.projects = projects;
-        projects.forEach(p -> p.setCustomers(Set.of(this)));
+        projects.forEach(p -> p.addCustomer(this));
+    }
+
+    public void addProject(Project project){
+        this.getProjects().add(project);
+        project.getCustomers().add(this);
+    }
+
+    public void removeProject(Project project){
+        projects.remove(project);
+        project.getCustomers().remove(this);
     }
 
     @Override
@@ -87,5 +97,17 @@ public class Customer {
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Customer)) return false;
+        return id != 0L && id == ((Customer) o).getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return 31;
     }
 }
