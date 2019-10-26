@@ -8,6 +8,7 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 
@@ -42,7 +43,10 @@ public class CustomerDAOImpl implements CustomerDAO {
                 .setParameter("id", id)
                 .list());
 
-        return set.iterator().next();
+        Iterator<Customer> iterator = set.iterator();
+        if(iterator.hasNext())
+            return iterator.next();
+        return null;
     }
 
     @Override
